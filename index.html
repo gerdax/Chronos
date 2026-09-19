@@ -4,10 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#17120f" />
-  <meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<link rel="manifest" href="manifest.webmanifest" />
   <title>Chronos — wiek w zapisie rzymskim</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23c99a52'/%3E%3Cpath d='M32 16v17l11 7' stroke='%2317120f' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
   <style>
@@ -39,44 +35,16 @@
   <main>
     <header><div class="mark">✦</div><p class="eyebrow">Chronos - który to wiek?</p></header>
     <section class="card" aria-label="Obliczanie wieku">
-      <form id="form"><label for="year">Wpisz rok</label><div class="row"><input
-  id="year"
-  name="year"
-  inputmode="text"
-  pattern="-?[0-9]{1,4}"
-  maxlength="5"
-  placeholder="np. 1410, 44 lub -44"
-  autocomplete="off"
-/><button type="submit">Oblicz</button></div></form>
+      <form id="form"><label for="year">Wpisz rok</label><div class="row"><input id="year" name="year" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="np. 1410" autocomplete="off" /><button type="submit">Oblicz</button></div></form>
       <div class="result" aria-live="polite"><div class="result-label">Wiek</div><div id="century" class="century">—</div></div>
     </section>
-    <footer>AD MMXXVI · MIARĄ CZASU JEST PAMIĘĆ</footer>
+    <footer>AD MMXXVI</footer>
   </main>
   <script>
     const form=document.getElementById('form'), input=document.getElementById('year'), output=document.getElementById('century'), hint=document.getElementById('hint');
     const roman=n=>{let s='', vals=[[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];for(const [v,c] of vals){while(n>=v){s+=c;n-=v}}return s};
     input.addEventListener('focus',()=>input.select());
-    form.addEventListener('submit', e => {
-  e.preventDefault();
-
-  const year = input.value.trim();
-
-  if (!/^-?\d{1,4}$/.test(year) || Number(year) === 0) {
-    output.textContent = '—';
-    return;
-  }
-
-  const numericYear = Number(year);
-  const century = Math.ceil(Math.abs(numericYear) / 100);
-
-  output.textContent =
-    roman(century) + (numericYear < 0 ? ' p.n.e.' : '');
-});
-    if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js');
-  });
-    }
+    form.addEventListener('submit',e=>{e.preventDefault(); const year=input.value.trim(); if(!/^\d{4}$/.test(year)||Number(year)<1){output.textContent='—';return} const century=Math.ceil(Number(year)/100); output.textContent=roman(century);});
   </script>
 </body>
 </html>
